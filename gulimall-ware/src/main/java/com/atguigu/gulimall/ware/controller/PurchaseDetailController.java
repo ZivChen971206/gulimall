@@ -33,6 +33,12 @@ public class PurchaseDetailController {
     /**
      * 列表
      */
+    @RequestMapping("/unreceive/list")
+    public R unreceivelist(@RequestParam Map<String, Object> params){
+        PageUtils page = purchaseDetailService.queryPageUnreceive(params);
+
+        return R.ok().put("page", page);
+    }
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = purchaseDetailService.queryPage(params);
