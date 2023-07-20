@@ -2,8 +2,8 @@ package com.atguigu.gulimall.ware.service.impl;
 
 import com.atguigu.common.utils.R;
 import com.atguigu.gulimall.ware.feign.ProductFeignService;
+import com.atguigu.gulimall.ware.vo.SkuHasStockVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +61,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             wareSkuEntity.setStock(skuNum);
             wareSkuEntity.setWareId(wareId);
             wareSkuEntity.setStockLocked(0);
-//            todo 远程查询sku的名字
+            // todo 远程查询sku的名字
             try {
                 R info = productFeignService.info(skuId);
                 Map<String, Object> data = (Map<String, Object>) info.get("skuInfo");
@@ -77,6 +77,17 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             wareSkuDao.insert(wareSkuEntity);
         }
         wareSkuDao.addStock(skuId, wareId, skuNum);
+    }
+
+    @Override
+    public List<SkuHasStockVo> getSkusHasStock(List<Long> skuIds) {
+        return skuIds.stream().map(skuId -> {
+            SkuHasStockVo skuHasStockVo = new SkuHasStockVo();
+            long count = baseMapper.getSkuStock(skuId);
+            skuHasStockVo.setSkuId(skuId);
+            skuHasStockVo.setHasStock(count>0);
+            return skuHasStockVo;
+        }).collect(Collectors.toList());
     }
 
 }

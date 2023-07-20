@@ -4,12 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.atguigu.gulimall.product.vo.Catelog2Vo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimall.product.entity.CategoryEntity;
 import com.atguigu.gulimall.product.service.CategoryService;
@@ -87,6 +84,12 @@ public class CategoryController {
         categoryService.removeMenuByIds(Arrays.asList(catIds));
 
         return R.ok();
+    }
+
+    @GetMapping("/index/json/catelog")
+    public R getCatalogJson() {
+        Map<String, List<Catelog2Vo>> catalogJson = categoryService.getCatalogJson();
+        return R.ok().put("data", catalogJson);
     }
 
 }
